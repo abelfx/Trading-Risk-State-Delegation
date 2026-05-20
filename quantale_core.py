@@ -618,7 +618,7 @@ def demo() -> None:
 
     q = build_risk_quantale()
 
-    # ── Stage 1-3: set and order ──────────────────────────────────────────────
+    # Stage 1-3: set and order 
     print("\n── Elements ─────────────────────────────────────────────")
     print("  Q =", q.base)
     print("  ⊥ (bottom) =", q.bottom)
@@ -635,7 +635,7 @@ def demo() -> None:
         comp = "comparable" if q.comparable(a, b) else "incomparable"
         print(f"  {a} {sym} {b}  ({comp})")
 
-    # ── Stage 4-5: lattice ────────────────────────────────────────────────────
+    # Stage 4-5: lattice
     print("\n── Joins and meets (pairs) ───────────────────────────────")
     pairs2 = [("paper_trade","micro_lot"), ("observe_only","full_risk"), ("halted","paper_trade")]
     for a, b in pairs2:
@@ -651,7 +651,7 @@ def demo() -> None:
     for s in subsets:
         print(f"  ⋁{s} = {q.big_join(s)},   ⋀{s} = {q.big_meet(s)}")
 
-    # ── Stage 6: monoid ───────────────────────────────────────────────────────
+    # Stage 6: monoid 
     print("\n── Monoid (⊗ = meet) ────────────────────────────────────")
     report = q.check_monoid(q.base)
     for k, v in report.items():
@@ -661,7 +661,7 @@ def demo() -> None:
     for a, b in compositions:
         print(f"  {a} ⊗ {b} = {q.mul(a,b)}")
 
-    # ── Stage 7: quantale properties ─────────────────────────────────────────
+    # Stage 7: quantale properties 
     print("\n── Quantale properties ──────────────────────────────────")
     print("  is_commutative:", q.is_commutative())
     print("  is_idempotent: ", q.is_idempotent())
@@ -669,7 +669,7 @@ def demo() -> None:
     dist = q.check_distributivity_report()
     print("  distributivity holds:", dist["distributivity"])
 
-    # ── Stage 8: residuals ────────────────────────────────────────────────────
+    # Stage 8: residuals
     print("\n── Residuals (right: a → c) ─────────────────────────────")
     queries = [
         ("full_risk",   "paper_trade",  "max delegation: strat at full_risk, cap=paper_trade"),
@@ -685,19 +685,19 @@ def demo() -> None:
     adj = q.verify_adjunction()
     print("  a⊗b≤c ⟺ b≤a→c ⟺ a≤c←b holds:", adj["adjunction_holds"])
 
-    # ── REQUIRED SUBMISSION QUERIES ───────────────────────────────────────────
+    # REQUIRED SUBMISSION QUERIES 
     print("\n── REQUIRED DOMAIN QUERIES ──────────────────────────────")
 
-    # 1. le (Less than or equal to)
+    # le (Less than or equal to)
     # Domain meaning: Checking if a current algorithm's risk state is safely within the target tier.
     print("  Query 1 (le): can_do(paper_trade, full_risk) ->", q.can_do("paper_trade", "full_risk"))
 
-    # 2. big_join (Least Upper Bound of a subset)
+    # big_join (Least Upper Bound of a subset)
     # Domain meaning: Finding the overall highest active risk tier currently deployed across multiple active strategies.
     print("  Query 2 (big_join): effective_permission([observe_only, micro_lot, halted]) ->",
           q.effective_permission(["observe_only", "micro_lot", "halted"]))
 
-    # 3. right_residual (Maximum Safe Delegation)
+    # right_residual (Maximum Safe Delegation)
     # Domain meaning: If the primary strategy wants to run at 'full_risk', but the global cap dictates
     # a max risk of 'paper_trade', what is the maximum risk level we can assign to the sub-execution routines?
     print("  Query 3 (right_residual): max_delegatable(full_risk, paper_trade) ->",
